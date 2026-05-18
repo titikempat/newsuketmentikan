@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Surat Keterangan - UPT Puskesmas Mentikan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* CSS Umum dan Layout */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f2f5f8;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: #e0f7fa;
+            color: #00796b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .clock {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none; /* Default: Sembunyikan semua form */
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media(min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .form-actions button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-save {
+            background: #00796b;
+            color: #fff;
+        }
+
+        .btn-update {
+            background-color: #ff9800;
+            color: #fff;
+        }
+        
+        .btn-cancel {
+            background-color: #aaa;
+            color: #fff;
+        }
+
+        .btn-action-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-clear {
+            background-color: #f44336;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .btn-toggle {
+            background: #00796b;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 6px;
+            padding: 5px 0;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f2f5f8;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .antrian-container {
+            margin-top: 30px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar input {
+            flex-grow: 1;
+        }
+
+        .antrian-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .antrian-table th, .antrian-table td {
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        .antrian-table th {
+            background-color: #f7f9fc;
+            color: #777;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .antrian-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .antrian-table tr:hover {
+            background-color: #f7f9fc;
+        }
+
+        .antrian-table .btn-action {
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            margin-right: 5px;
+            background: #fff;
+            transition: all 0.3s;
+        }
+
+        .antrian-table .btn-action:hover {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .antrian-table .btn-action.edit {
+            color: #555;
+            border-color: #e0e0e0;
+        }
+
+        .antrian-table .btn-action.hapus {
+            color: #dc3545;
+            border-color: #f8d7da;
+        }
+        
+        .antrian-table .btn-action.print {
+            color: #007bff;
+            border-color: #b3d7ff;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 16px;
+        }
+
+        .status-badge.sehat {
+            background-color: #e6f7ea;
+            color: #38a169;
+            border: 1px solid #c6e4d2;
+        }
+
+        .status-badge.sakit {
+            background-color: #fcebeb;
+            color: #e53e3e;
+            border: 1px solid #f9d3d3;
+        }
+
+        .status-badge.berobat {
+            background-color: #fff9e6;
+            color: #d69e2e;
+            border: 1px solid #f9eac2;
+        }
+
+        .unit-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 16px;
+        }
+
+        .unit-badge.puskesmas {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #bbdeff;
+        }
+
+        .unit-badge.miji {
+            background-color: #ffe0b2;
+            color: #e65100;
+            border: 1px solid #ffcc80;
+        }
+
+        .unit-badge.pulorejo {
+            background-color: #f3e5f5;
+            color: #8e24aa;
+            border: 1px solid #ce93d8;
+        }
+
+        .kosong-state {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+       /* CSS untuk layout cetak */
+@media print {
+    body {
+        font-family: 'Times New Roman', Times, serif !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: #fff !important;
+    }
+
+    .container, header, .btn-action-group, .antrian-container {
+        display: none !important;
+    }
+    
+    #cetakSehat, #cetakSakit, #cetakBerobat {
+        display: block !important;
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto !important;
+        padding: 10mm 15mm !important;
+        box-sizing: border-box !important;
+    }
+    
+    .a4-page {
+        box-shadow: none !important;
+        width: 100% !important;
+        min-height: 100% !important;
+        padding: 0 !important;
+    }
+    
+    .header-print {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5px;
+    }
+
+    .header-print .logo {
+        width: 80px;
+        height: auto;
+        margin-right: 15px;
+    }
+
+    .header-print .title-print {
+        flex-grow: 1;
+        line-height: 1.3;
+        text-align: center;
+    }
+    
+    .header-print .title-print p {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .header-print .title-print .kota-title {
+        font-size: 18px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .header-print .title-print .upt-title {
+        font-size: 18px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .header-print .address {
+        font-size: 12px;
+        margin-top: 5px;
+        line-height: 1.2;
+    }
+
+    .divider-line {
+        border-top: 2px solid #000;
+        margin: 10px 0;
+    }
+
+    .content-print {
+        font-size: 18px;
+        line-height: 1.3;
+    }
+    
+    h2.surat-title {
+        text-align: center;
+        text-decoration: underline;
+        margin-bottom: 5px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .surat-number {
+        text-align: center;
+        margin-bottom: 15px;
+        margin-top: 0px;
+        font-size: 18px;
+    }
+
+    .section-print {
+        margin-bottom: 5px;
+    }
+
+    .data-list-print {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-size: 18px;
+    }
+
+    .data-list-print li {
+        display: flex;
+        margin-bottom: 2px;
+    }
+
+    .data-list-print li .label-print {
+        width: 150px;
+        position: relative;
+        padding-left : 20px;
+    }
+
+    .data-list-print li .label-print::after {
+        content: ":";
+        position: absolute;
+        right: 0;
+    }
+    .data-list-print li .value-print {
+        flex-grow: 1;
+        padding-left: 10px;
+    }
+
+.signature-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    font-size: 18px;
+}
+
+.signature-column {
+    width: 45%;
+    /* Aturan baru untuk merapatkan jarak */
+    line-height: 1; /* Mengurangi spasi antar baris */
+    margin-top: 0; /* Menghilangkan margin atas */
+    margin-bottom: 0; /* Menghilangkan margin bawah */
+}
+
+/* Kunci Perbaikan: Gaya Garis Pasien */
+.signature-line-pasien {
+    /* Gunakan ukuran dan margin yang sama dengan area nama dokter */
+    height: 1px; /* Tinggi sangat kecil, hanya untuk garis */
+    border-bottom: 1px solid black; /* Membuat garis */
+    width: 70%; /* Membuat garis sepanjang lebar kolom */
+    margin-top: 82px; /* Memberi ruang di atas garis */
+}
+
+.signature-line {
+    border-bottom: 1px dashed #000;
+    margin-top: 50px;
+}
+
+.signature-column .dokter-name {
+    font-weight: bold;
+    text-decoration: underline;
+    /* Aturan baru untuk merapatkan jarak */
+    margin-bottom: 0; /* Menghilangkan margin di bawah nama dokter */
+}
+
+.signature-column #printNip {
+    margin-top: 0;
+}
+
+    /* CSS Khusus untuk Surat Sakit dan Berobat */
+    .p-intro {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    
+    .data-list-sakit {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        font-size: 18px;
+    }
+
+    .data-list-sakit li {
+        display: flex;
+        margin-bottom: 2px;
+    }
+
+    .data-list-sakit li .label-sakit {
+        display: inline-block;
+        width: 150px;
+        position: relative;
+        font-weight: normal;
+        padding-left : 20px;
+    }
+
+    .data-list-sakit li .label-sakit::after {
+        content: ":";
+        position: absolute;
+        right: 0;
+    }
+    .data-list-sakit li .value-sakit {
+        flex-grow: 1;
+        padding-left: 10px;
+    }
+
+    .p-reason {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-top: 20px;
+        text-align: justify;
+    }
+    
+    .p-closing {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-top: 20px;
+        text-align: justify;
+    }
+
+    .signature-section-right {
+        text-align: right;
+        margin-top: 30px;
+        font-size: 18px;
+    }
+
+    /* Perbaikan Spasi */
+    #cetakSakit .value-sakit.usia,
+    #cetakBerobat .value-sakit.usia {
+        display: inline;
+        padding-left: 10px;
+    }
+
+    #cetakSakit .value-sakit.usia::after,
+    #cetakBerobat .value-sakit.usia::after {
+        content: ' Tahun';
+    }
+    
+    /* Perbaikan Spasi Khusus untuk tanda tangan dokter */
+    .signature-column .dokter-name,
+    .signature-column #printNip {
+        line-height: 1;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .signature-column .dokter-name + #printNip {
+        margin-top: 5px; /* Memberikan sedikit spasi jika diperlukan */
+    }
+}
+/* animasi loading */
+#loading {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+#riwayatTable {
+    width: 100%;
+    border-collapse: collapse; /* Menggabungkan border sel */
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+#riwayatTable thead {
+    background-color: #f2f2f2;
+}
+
+#riwayatTable th,
+#riwayatTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#riwayatTable tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Memberi warna berbeda pada baris genap */
+}
+
+#riwayatTable tbody tr:hover {
+    background-color: #e2e2e2; /* Memberi efek hover saat kursor di atas baris */
+}
+
+#pagination-controls {
+    display: flex;
+    justify-content: flex-start; /* Mengatur elemen ke kiri */
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#pagination-controls button {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#pagination-controls button:hover:not(:disabled) {
+    background-color: #e0e0e0;
+    border-color: #ccc;
+    transform: translateY(-2px);
+}
+
+#pagination-controls button:disabled {
+    background-color: #fafafa;
+    color: #aaa;
+    cursor: not-allowed;
+    border-color: #eee;
+}
+
+#pagination-controls span {
+    font-size: 14px;
+    color: #555;
+    padding: 0 10px;
+}
+
+/* CSS untuk Button Filter Modern */
+.btn-action.filter {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 8px; /* Membuat sudut lebih melengkung */
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-action.filter:hover {
+  background-color: #00796b;
+  color: #fff;
+  transform: translateY(-2px); /* Memberi efek "terangkat" saat di-hover */
+}
+
+.btn-action.filter:active {
+  background-color: #00796b;
+  color: #fff;
+  transform: translateY(0); /* Kembali ke posisi semula saat ditekan */
+}
+
+/* running text */
+.running-text {
+  position: relative;
+  overflow: hidden;
+  background: red;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+  padding: 6px 0;
+}
+
+.running-text span {
+  display: inline-block;
+  /* mulai langsung dari kanan layar */
+  transform: translateX(100%);
+  animation: slideLoop 40s linear infinite;
+}
+
+/* 🔹 Animasi lambat + loop */
+@keyframes slideLoop {
+  0%   { transform: translateX(100%); opacity: 1; }
+  35%  { transform: translateX(0); opacity: 1; }   /* sampai tengah */
+  40%  { transform: translateX(0); opacity: 0; }   /* kedip */
+  50%  { transform: translateX(0); opacity: 1; }   /* diam sebentar */
+  100% { transform: translateX(-100%); opacity: 1;} /* keluar kiri */
+}
+    </style>
+</head>
+<body>
+
+    <header>
+        <p style="color:#00796b; font-size: 20px; font-weight: bold; ">
+            <i class="fas fa-notes-medical"></i> Formulir Surat Keterangan - UPT Puskesmas Mentikan
+        </p>
+        <div class="clock" id="clock"></div>
+    </header>
+
+    <!-- 🔹 Running Teks -->
+        <div class="running-text">
+        <span>‼️ MOHON CROSSCEK ULANG KE PASIEN TERLEBIH DAHULU SEMUA DATANYA SEBELUM MELAKUKAN SIMPAN DATA!!! ‼️</span>
+        </div>
+
+    <div class="container">
+        <div class="btn-action-group">
+            <div class="dropdown">
+                <button class="btn-toggle">
+                    <i class="fas fa-plus-circle"></i> Tambah Surat Keterangan
+                </button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="showForm('sehat')">Surat Keterangan Sehat</a>
+                    <a href="#" onclick="showForm('sakit')">Surat Keterangan Sakit</a>
+                    <a href="#" onclick="showForm('berobat')">Surat Keterangan Berobat</a>
+                </div>
+            </div>
+            <button onclick="clearTodayList()" class="btn-clear">
+                <i class="fas fa-trash-alt"></i> Hapus Daftar Hari Ini
+            </button>
+        </div>
+
+        <form id="formSuratSehat">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tanggal Surat</label>
+                    <input type="date" name="TGL SURAT" required>
+                </div>
+                <div class="form-group">
+                    <label>Bulan</label>
+                    <input type="text" name="BULAN" required readonly>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Surat</label>
+                    <input type="text" name="NO SURAT" placeholder="Abaikan nomornya" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Unit Penerbit</label>
+                    <select name="Unit Penerbit" required>
+                        <option value="">--Pilih Unit--</option>
+                        <option value="Puskesmas Mentikan">Puskesmas Mentikan</option>
+                        <option value="Pustu Miji">Pustu Miji</option>
+                        <option value="Pustu Pulorejo">Pustu Pulorejo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>NIK</label>
+                    <input type="text" name="NIK" required>
+                </div>
+                <div class="form-group">
+                    <label>Nama</label>
+                    <input type="text" name="NAMA" required>
+                </div>
+                <div class="form-group">
+                    <label>Kota Lahir</label>
+                    <input type="text" name="KOTA LAHIR" required>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Lahir</label>
+                    <input type="date" name="TGL LAHIR" required>
+                </div>
+                    <div class="form-group">
+                    <label for="usiaSehat">Usia</label>
+                    <input type="number" id="usiaBerobat" name="USIA" required>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Kelamin</label>
+                    <select name="JK" required>
+                        <option value="">--Pilih--</option>
+                        <option>Laki-laki</option>
+                        <option>Perempuan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Alamat</label>
+                    <input type="text" name="ALAMAT" required>
+                </div>
+                <div class="form-group">
+                    <label>Pekerjaan/Sekolah</label>
+                    <input type="text" name="PEKERJAAN/SEKOLAH" required>
+                </div>
+                <div class="form-group">
+                    <label>Keperluan</label>
+                    <input type="text" name="KEPERLUAN" required>
+                </div>
+                <div class="form-group">
+                    <label>Merokok</label>
+                    <select name="MEROKOK">
+                        <option value="">--Pilih--</option>
+                        <option>Ya</option>
+                        <option>Tidak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tinggi Badan (cm)</label>
+                    <input type="number" name="TB" required>
+                </div>
+                <div class="form-group">
+                    <label>Berat Badan (kg)</label>
+                    <input type="number" name="BB" required>
+                </div>
+                <div class="form-group">
+                    <label>Sistole (mmHg)</label>
+                    <input type="number" name="SIS" required>
+                </div>
+                <div class="form-group">
+                    <label>Diastole (mmHg)</label>
+                    <input type="number" name="DIS" required>
+                </div>
+                <div class="form-group">
+                    <label>Kacamata</label>
+                    <select name="KACAMATA">
+                        <option value="">--Pilih--</option>
+                        <option>Ya</option>
+                        <option>Tidak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Buta Warna</label>
+                    <select name="BUTA WARNA">
+                        <option value="">--Pilih--</option>
+                        <option>Ya</option>
+                        <option>Tidak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Golongan Darah</label>
+                    <select name="GOLDA" required>
+                        <option value="">--Pilih Golongan Darah--</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="O">O</option>
+                        <option value="AB">AB</option>
+                        <option value="A+">A+</option>
+                        <option value="B+">B+</option>
+                        <option value="AB+">AB+</option>
+                        <option value="Tidak tahu">Tidak tahu</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Lingkar Perut</label>
+                    <input type="text" name="LP">
+                </div>
+                <div class="form-group">
+                    <label>Bertato</label>
+                    <select name="BERTATO">
+                        <option value="">--Pilih--</option>
+                        <option>Ya</option>
+                        <option>Tidak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Bertindik</label>
+                    <select name="BERTINDIK">
+                        <option value="">--Pilih--</option>
+                        <option>Ya</option>
+                        <option>Tidak</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Gula Darah Acak (mg/dL)</label>
+                    <input type="text" name="GDA">
+                </div>
+                <div class="form-group">
+                    <label>Hasil</label>
+                    <select name="HASIL" required>
+                        <option value="">--Pilih Hasil--</option>
+                        <option value="Sehat">Sehat</option>
+                        <option value="Catin">Catin</option>
+                        <option value="Tidak Sehat">Tidak Sehat</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dokter</label>
+                    <select name="DOKTER" required>
+                        <option value="">--Pilih Dokter--</option>
+                        <option value="dr. Lampita Dyah Kartikaningsih">dr. Lampita Dyah Kartikaningsih</option>
+                        <option value="dr. Emika Ambar Pangesti">dr. Emika Ambar Pangesti</option>
+                        <option value="drg. Fardian Santoso">drg. Fardian Santoso</option>
+                        <option value="Dokter lain">Dokter lain</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>NIP</label>
+                    <input type="text" name="NIP" required readonly>
+                </div>
+                <div class="form-group">
+                    <label>IMT</label>
+                    <input type="number" name="IMT" step="0.01" readonly>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-save" type="submit" id="submitBtnSehat">
+                    <i class="fas fa-save"></i> Simpan & Buat Surat Sehat
+                </button>
+                <button class="btn-cancel" type="button" onclick="closeForm()">
+                    <i class="fas fa-times-circle"></i> Tutup
+                </button>
+            </div>
+        </form>
+
+        <form id="formSuratSakit">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tanggal Surat</label>
+                    <input type="date" name="TGL SURAT" required>
+                </div>
+                <div class="form-group">
+                    <label>Bulan</label>
+                    <input type="text" name="BULAN" required readonly>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Surat</label>
+                    <input type="text" name="NO SURAT" placeholder="Abaikan nomornya" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Unit Penerbit</label>
+                    <select name="Unit Penerbit" required>
+                        <option value="">--Pilih Unit--</option>
+                        <option value="Puskesmas Mentikan">Puskesmas Mentikan</option>
+                        <option value="Pustu Miji">Pustu Miji</option>
+                        <option value="Pustu Pulorejo">Pustu Pulorejo</option>
+                    </select>
+                </div>
+                    <div class="form-group">
+                    <label>NIK</label>
+                    <input type="text" name="NIK" required>
+                </div>
+                <div class="form-group">
+                    <label for="namaSakit">Nama</label>
+                    <input type="text" id="namaSakit" name="NAMA" required>
+                </div>
+                <div class="form-group">
+                    <label for="usiaSakit">Umur</label>
+                    <input type="number" id="usiaSakit" name="USIA" required>
+                </div>
+                <div class="form-group">
+                    <label for="jkSakit">Jenis Kelamin</label>
+                    <select id="jkSakit" name="JK" required>
+                        <option value="">--Pilih--</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alamatSakit">Alamat</label>
+                    <input type="text" id="alamatSakit" name="ALAMAT" required>
+                </div>
+                <div class="form-group">
+                    <label for="pekerjaanSakit">Pekerjaan</label>
+                    <input type="text" id="pekerjaanSakit" name="PEKERJAAN" required>
+                </div>
+                <div class="form-group">
+    <label for="lamaIstirahat">Lama Istirahat</label>
+    <select id="lamaIstirahat" name="LAMA ISTIRAHAT" onchange="aturTanggalIstirahat()" required>
+        <option value="">-- Pilih Lama Istirahat --</option>
+        <option value="1">1 (satu) hari</option>
+        <option value="2">2 (dua) hari</option>
+    </select>
+</div>
+<div class="form-group">
+    <label for="tanggalIstirahatContainer">Tanggal Istirahat</label>
+    <div id="tanggalIstirahatContainer">
+        </div>
+    <input type="hidden" id="tanggalIstirahatSubmit" name="TANGGAL ISTIRAHAT" required>
+</div>
+                <div class="form-group">
+                    <label for="alasanSakit">Alasan Istirahat</label>
+                    <select id="alasanSakit" name="ALASAN ISTIRAHAT" required>
+                        <option value="">--Pilih--</option>
+                        <option value="Sakit">Sakit</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dokter</label>
+                    <select name="DOKTER" required>
+                        <option value="">--Pilih Dokter--</option>
+                        <option value="dr. Lampita Dyah Kartikaningsih">dr. Lampita Dyah Kartikaningsih</option>
+                        <option value="dr. Emika Ambar Pangesti">dr. Emika Ambar Pangesti</option>
+                        <option value="drg. Fardian Santoso">drg. Fardian Santoso</option>
+                        <option value="Dokter lain">Dokter lain</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>NIP</label>
+                    <input type="text" name="NIP" required readonly>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-save" type="submit" id="submitBtnSakit">
+                    <i class="fas fa-save"></i> Simpan & Buat Surat Sakit
+                </button>
+                <button class="btn-cancel" type="button" onclick="closeForm()">
+                    <i class="fas fa-times-circle"></i> Tutup
+                </button>
+            </div>
+        </form>
+
+        <form id="formSuratBerobat">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tanggal Surat</label>
+                    <input type="date" name="TGL SURAT" required>
+                </div>
+                <div class="form-group">
+                    <label>Bulan</label>
+                    <input type="text" name="BULAN" required readonly>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Surat</label>
+                    <input type="text" name="NO SURAT" placeholder="Abaikan nomornya" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Unit Penerbit</label>
+                    <select name="Unit Penerbit" required>
+                        <option value="">--Pilih Unit--</option>
+                        <option value="Puskesmas Mentikan">Puskesmas Mentikan</option>
+                        <option value="Pustu Miji">Pustu Miji</option>
+                        <option value="Pustu Pulorejo">Pustu Pulorejo</option>
+                    </select>
+                </div>
+                    <div class="form-group">
+                    <label>NIK</label>
+                    <input type="text" name="NIK" required>
+                </div>
+                <div class="form-group">
+                    <label for="namaBerobat">Nama</label>
+                    <input type="text" id="namaBerobat" name="NAMA" required>
+                </div>
+                <div class="form-group">
+                    <label for="usiaBerobat">Usia</label>
+                    <input type="number" id="usiaBerobat" name="USIA" required>
+                </div>
+                <div class="form-group">
+                    <label for="jkBerobat">Jenis Kelamin</label>
+                    <select id="jkBerobat" name="JK" required>
+                        <option value="">--Pilih--</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="alamatBerobat">Alamat</label>
+                    <input type="text" id="alamatBerobat" name="ALAMAT" required>
+                </div>
+                <div class="form-group">
+                    <label for="pekerjaanBerobat">Pekerjaan</label>
+                    <input type="text" id="pekerjaanBerobat" name="PEKERJAAN" required>
+                </div>
+                <div class="form-group">
+                    <label for="tanggalBerobat">Tanggal Berobat</label>
+                    <input type="date" id="tanggalBerobat" name="TANGGAL BEROBAT" required>
+                </div>
+                <div class="form-group">
+                    <label>Dokter</label>
+                    <select name="DOKTER" required>
+                        <option value="">--Pilih Dokter--</option>
+                        <option value="dr. Lampita Dyah Kartikaningsih">dr. Lampita Dyah Kartikaningsih</option>
+                        <option value="dr. Emika Ambar Pangesti">dr. Emika Ambar Pangesti</option>
+                        <option value="drg. Fardian Santoso">drg. Fardian Santoso</option>
+                        <option value="Dokter lain">Dokter lain</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>NIP</label>
+                    <input type="text" name="NIP" required readonly>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn-save" type="submit" id="submitBtnBerobat">
+                    <i class="fas fa-save"></i> Simpan & Buat Surat Berobat
+                </button>
+                <button class="btn-cancel" type="button" onclick="closeForm()">
+                    <i class="fas fa-times-circle"></i> Tutup
+                </button>
+            </div>
+        </form>
+
+        
+        <div class="antrian-container">
+            <h2>Daftar Pemohon Surat</h2>
+            <div class="toolbar">
+                <input type="text" id="searchInput" placeholder="Cari nama, alamat, atau jenis surat....">
+                <div style="display: flex; align-items: center; justify-content: flex-end; margin-bottom: 15px; gap: 10px;">
+                <label for="filterDate">Filter Tanggal:</label></div>
+                <div style="display: flex; align-items: center; justify-content: flex-end; margin-bottom: 15px; gap: 10px;">
+                <!-- Pilihan: tetap pakai filterDate tunggal + tambahan rentang -->
+                <input type="date" id="filterDate"> 
+                <button id="filterDateButton" class="btn-action filter"><i class="fas fa-filter"></i> Filter</button>
+
+                <!-- Rentang tanggal -->
+                <input type="date" id="startDate" placeholder="Dari">
+                <input type="date" id="endDate" placeholder="Sampai">
+                <button id="filterRangeButton" class="btn-action filter">Antara</button>
+                <button id="resetRangeButton" class="btn-action filter">Reset</button>
+
+
+                <button class="btn-action filter" id="sortButton" onclick="toggleSortOrder()">
+                    <i class="fas fa-sort-numeric-down-alt"></i> Urutkan
+                </button>
+
+            </div>
+            </div>
+          
+           <div id="loading" style="display:none;"></div>
+
+            <div id="antrianList"></div>
+            <div id="kosongState" class="kosong-state">
+                <p>Daftar antrean masih kosong.</p>
+            </div>
+
+            <div id="pagination-controls"></div>
+
+                    <h3>Riwayat Penerbitan Surat (Kemarin)</h3>
+<table class="antrian-table" id="riwayatTable">
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>No. Surat</th>
+            <th>Nama</th>
+            <th>Jenis Surat</th>
+            <th>Tanggal</th>
+        </tr>
+    </thead>
+    <tbody>
+        </tbody>
+</table>
+        </div>
+    </div>
+
+
+
+    <div id="cetakSehat" style="display: none;">
+        <div class="a4-page">
+            <div class="header-print">
+                <img src="https://i.ibb.co.com/fRrt8nL/pngwing-com-1.png" alt="Logo UPT Puskesmas" class="logo">
+                <div class="title-print">
+                    <p class="kota-title">PEMERINTAH KOTA MOJOKERTO</p>
+                    <p>DINAS KESEHATAN, PENGENDALIAN PENDUDUK DAN KELUARGA BERENCANA</p>
+                    <p class="upt-title">UPT PUSKESMAS MENTIKAN</p>
+                    <p class="address">Jl. Prapanca No. 55 Kec. Prajurit Kulon Telp (0321)321057</p>
+                    <p class="address">MOJOKERTO</p>
+                </div>
+            </div>
+            <div class="divider-line"></div>
+            <h2 class="surat-title">SURAT KETERANGAN SEHAT</h2>
+            <p class="surat-number">No. <span id="printNoSurat"></span> / <span id="printBulan"></span> /445/PKM/MNTK/2026</p>
+
+            <div class="content-print">
+                <p>Yang bertanda tangan dibawah ini menerangkan bahwa :</p>
+                <ul class="data-list-print">
+                    <li><span class="label-print">Nama</span><span class="value-print" id="printNama"></span></li>
+                    <li><span class="label-print">Tempat / Tgl. Lahir</span><span class="value-print"><span id="printKotaLahir"></span> / <span id="printTglLahir"></span></span></li>
+                    <li><span class="label-print">Jenis Kelamin</span><span class="value-print" id="printJK"></span></li>
+                    <li><span class="label-print">Alamat</span><span class="value-print" id="printAlamat"></span></li>
+                    <li><span class="label-print">Pekerjaan/Sekolah</span><span class="value-print" id="printPekerjaan"></span></li>
+                    <li><span class="label-print">Keperluan</span><b><span class="value-print" id="printKeperluan"></span></b></li>
+                </ul>
+                <p>
+                    Menerangkan bahwa yang bersangkutan telah dilakukan pemeriksaan kesehatan dengan kesimpulan saat ini dinyatakan <span id="printHasil"></span>.
+                    <br>
+                    Demikian surat keterangan ini dibuat untuk dipergunakan seperlunya.
+                </p>
+                
+                <div class="section-print">
+                    <ul class="data-list-print">
+                        <li><span class="label-print">Tinggi badan</span><span class="value-print" id="printTb"></span></li>
+                        <li><span class="label-print">Berat badan</span><span class="value-print" id="printBb"></span></li>
+                        <li><span class="label-print">Tensi</span><span class="value-print"><span id="printSistole"></span> / <span id="printDiastole"></span> mmHg</span></li>
+                        <li><span class="label-print">Memakai Kacamata</span><span class="value-print" id="printKacamata"></span></li>
+                        <li><span class="label-print">Buta warna</span><span class="value-print" id="printButaWarna"></span></li>
+                        <li><span class="label-print">Golongan Darah</span><span class="value-print" id="printGolda"></span></li>
+                        <li><span class="label-print">Bertato</span><span class="value-print" id="printBertato"></span></li>
+                        <li><span class="label-print">Bertindik</span><span class="value-print" id="printBertindik"></span></li>
+                    </ul>
+                </div>
+            </div>
+<div class="signature-section">
+    <div class="signature-column" style="text-align: left;">
+        <p>Tanda Tangan</p>
+        <p style="margin-top: -10px;">Yang bersangkutan</p>
+        <div class="signature-line-pasien"></div>
+    </div>
+
+    <div class="signature-column" style="text-align: right;">
+        <p>Mojokerto, <span id="printTglSurat"></span></p>
+        <p style="margin-top: -10px;">Dokter Pemeriksa</p>
+        <div style="height: 50px;"></div>
+        <p style="margin-top: 0;"><span class="dokter-name" id="printDokter"></span></p>
+        <p style="margin-top: -10px;">NIP. <span class="nip" id="printNip"></span></p>
+    </div>
+</div>
+        </div>
+    </div>
+
+    <div id="cetakSakit" style="display: none;">
+        <div class="a4-page">
+            <div class="header-print">
+                <img src="https://i.ibb.co.com/fRrt8nL/pngwing-com-1.png" alt="Logo UPT Puskesmas" class="logo">
+                <div class="title-print">
+                    <p class="kota-title">PEMERINTAH KOTA MOJOKERTO</p>
+                    <p>DINAS KESEHATAN, PENGENDALIAN PENDUDUK DAN KELUARGA BERENCANA</p>
+                    <p class="upt-title">UPT PUSKESMAS MENTIKAN</p>
+                    <p class="address">Jl. Prapanca No. 55 Kec. Prajurit Kulon Telp (0321)321057</p>
+                    <p class="address">MOJOKERTO</p>
+                </div>
+            </div>
+            <div class="divider-line"></div>
+            <h2 class="surat-title" id="suratTitleSakit">SURAT KETERANGAN SAKIT</h2>
+            <p class="surat-number" id="suratNumberSakit">
+                NOMOR : <span id="printNoSuratSakit"></span> / <span id="printBulanSakit"></span> /445/PKM/MNTK/2026
+            </p>
+            <div class="content-print">
+                <p class="p-intro">Kami yang bertandatangan di bawah ini menyatakan bahwa pasien :</p>
+                <ul class="data-list-sakit">
+                    <li><span class="label-sakit">Nama</span><span class="value-sakit" id="printNamaSakit"></span></li>
+                    <li><span class="label-sakit">Umur</span><span class="value-sakit usia" id="printUsiaSakit"></span></li>
+                    <li><span class="label-sakit">Jenis Kelamin</span><span class="value-sakit" id="printJkSakit"></span></li>
+                    <li><span class="label-sakit">Alamat</span><span class="value-sakit" id="printAlamatSakit"></span></li>
+                    <li><span class="label-sakit">Pekerjaan</span><span class="value-sakit" id="printPekerjaanSakit"></span></li>
+                </ul>
+                <p class="p-reason">
+                    Benar-benar membutuhkan istirahat selama <span id="printLamaIstirahat"></span> hari, pada tanggal <span id="printTanggalIstirahat"></span> karena <b>Sakit</b>.
+                </p>
+                <p class="p-closing">
+                    Demikian Surat Keterangan ini kami buat dengan sebenarnya dan untuk dipergunakan sebagaimana mestinya.
+                </p>
+            </div>
+            <div class="signature-section-right">
+                <p>Mojokerto, <span id="printTglSuratSakit"></span></p>
+                <p style="margin-top: -10px;">Dokter Pemeriksa</p>
+                <div style="height: 50px;"></div>
+                <p><b><span class="dokter-name" id="printDokterSakit" style="text-decoration: underline"></span></b></p>
+                <p style="margin-top: -10px;">NIP. <span class="nip" id="printNipSakit"></span></p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="cetakBerobat" style="display: none;">
+        <div class="a4-page">
+            <div class="header-print">
+                <img src="https://i.ibb.co.com/fRrt8nL/pngwing-com-1.png" alt="Logo UPT Puskesmas" class="logo">
+                <div class="title-print">
+                    <p class="kota-title">PEMERINTAH KOTA MOJOKERTO</p>
+                    <p>DINAS KESEHATAN, PENGENDALIAN PENDUDUK DAN KELUARGA BERENCANA</p>
+                    <p class="upt-title">UPT PUSKESMAS MENTIKAN</p>
+                    <p class="address">Jl. Prapanca No. 55 Kec. Prajurit Kulon Telp (0321)321057</p>
+                    <p class="address">MOJOKERTO</p>
+                </div>
+            </div>
+            <div class="divider-line"></div>
+            <h2 class="surat-title" id="suratTitleBerobat">SURAT KETERANGAN BEROBAT</h2>
+            <p class="surat-number" id="suratNumberBerobat">
+                NOMOR : <span id="printNoSuratBerobat"></span> / <span id="printBulanBerobat"></span> /445/PKM/MNTK/2026
+            </p>
+
+            <div class="content-print">
+                <p class="p-intro">Kami yang bertandatangan di bawah ini menyatakan bahwa pasien :</p>
+                <ul class="data-list-sakit">
+                    <li><span class="label-sakit">Nama</span><span class="value-sakit" id="printNamaBerobat"></span></li>
+                    <li><span class="label-sakit">Usia</span><span class="value-sakit usia" id="printUsiaBerobat"></span></li>
+                    <li><span class="label-sakit">Jenis Kelamin</span><span class="value-sakit" id="printJkBerobat"></span></li>
+                    <li><span class="label-sakit">Alamat</span><span class="value-sakit" id="printAlamatBerobat"></span></li>
+                    <li><span class="label-sakit">Pekerjaan</span><span class="value-sakit" id="printPekerjaanBerobat"></span></li>
+                </ul>
+                <p class="p-reason">
+                    Benar-benar Berobat di UPT Puskesmas Mentikan pada tanggal <span id="printTanggalBerobat"></span>.
+                </p>
+                <p class="p-closing">
+                    Demikian Surat Keterangan ini kami buat dengan sebenarnya dan untuk dipergunakan sebagaimana mestinya.
+                </p>
+            </div>
+            <div class="signature-section-right">
+                <p>Mojokerto, <span id="printTglSuratBerobat"></span></p>
+                <p style="margin-top: -10px;">Dokter Pemeriksa</p>
+                <div style="height: 50px;"></div>
+                <p><b><span class="dokter-name" id="printDokterBerobat" style="text-decoration: underline"></span></b></p>
+                <p style="margin-top: -10px;">NIP. <span class="nip" id="printNipBerobat"></span></p>
+            </div>
+        </div>
+    </div>
+    
+<script>
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyzNuqmDQaSE4EBJAg6VK0CZzMbljcpOd8TaVwAHKDTWPvT3XY9_4EycyY5gXJ1sPZU/exec';
+    let editIndex = null;
+    let sortOrder = 'desc';
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let selectedDate = new Date().toISOString().split('T')[0];
+    let dateRange = { start: null, end: null };
+
+    const loading = document.getElementById('loading');
+
+    function showLoading() {
+        if (loading) loading.style.display = 'block';
+    }
+
+    function hideLoading() {
+        if (loading) loading.style.display = 'none';
+    }
+
+    async function fetchDataFromGAS() {
+        showLoading();
+        try {
+            const res = await fetch(GAS_URL, {
+                method: 'GET',
+                mode: 'cors'
+            });
+
+            const text = await res.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (err) {
+                console.warn('Response dari GAS bukan JSON valid. Isi response (awalan):', text.slice(0, 300));
+                throw new Error('Response GAS bukan JSON. Cek deployment GAS / CORS.');
+            }
+
+            if (!Array.isArray(data)) {
+                if (Array.isArray(data.data)) data = data.data;
+                else if (Array.isArray(data.result)) data = data.result;
+                else {
+                    console.warn('Data bukan array, menyimpan apa adanya ke localStorage.');
+                }
+            }
+
+            localStorage.setItem('antrian', JSON.stringify(data));
+            currentPage = 1;
+            renderAntrian(selectedDate);
+            renderRiwayat();
+        } catch (err) {
+            alert("Gagal ambil data: " + (err.message || err));
+            console.error("Fetch Error:", err);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    function updateClock() {
+        const el = document.getElementById('clock');
+        const now = new Date();
+        if (el) {
+            el.textContent = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+    }
+
+    function showForm(type) {
+        document.querySelectorAll('form').forEach(f => f.style.display = 'none');
+        editIndex = null;
+        const form = document.getElementById(`formSurat${type.charAt(0).toUpperCase() + type.slice(1)}`);
+        if (form) {
+            form.style.display = 'block';
+            const btn = form.querySelector('.btn-save');
+            btn.textContent = `Simpan & Buat Surat ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+            btn.className = 'btn-save';
+            form.reset();
+            if (type === 'sakit') {
+                aturTanggalIstirahat();
+            }
+        }
+    }
+
+    function closeForm() {
+        document.querySelectorAll('form').forEach(f => {
+            f.style.display = 'none';
+            f.reset();
+        });
+        editIndex = null;
+    }
+
+    function aturTanggalIstirahat() {
+    const lama = document.getElementById('lamaIstirahat') ? document.getElementById('lamaIstirahat').value : '';
+    const container = document.getElementById('tanggalIstirahatContainer');
+    const submitInput = document.getElementById('tanggalIstirahatSubmit');
+
+    // Kosongkan container dan nilai submit terlebih dahulu
+    container.innerHTML = '';
+    submitInput.value = '';
+
+    if (!lama) {
+        submitInput.removeAttribute('required'); // Hapus required jika belum memilih
+        return;
+    }
+
+    // Set required kembali setelah memilih
+    submitInput.setAttribute('required', 'required');
+
+    if (lama === '1') {
+        // Pilihan 1 Hari (1 input tanggal)
+        
+        // Buat input tanggal pertama
+        const input1 = document.createElement('input');
+        input1.type = 'date';
+        input1.id = 'tglMulai';
+        input1.className = 'form-control'; // Opsional, sesuaikan dengan CSS Anda
+        input1.required = true;
+        
+        // Tambahkan event listener untuk memperbarui input submit
+        input1.onchange = function() {
+            submitInput.value = this.value; // Nilai submit adalah tanggal tunggal
+        };
+
+        container.appendChild(input1);
+
+    } else if (lama === '2') {
+        // Pilihan 2 Hari (2 input tanggal: Mulai dan Selesai)
+
+        // 1. Input Tanggal Mulai
+        const labelMulai = document.createElement('label');
+        labelMulai.textContent = 'Mulai: ';
+        const inputMulai = document.createElement('input');
+        inputMulai.type = 'date';
+        inputMulai.id = 'tglMulai';
+        inputMulai.className = 'form-control'; 
+        inputMulai.required = true;
+        
+        // 2. Input Tanggal Selesai
+        const labelSelesai = document.createElement('label');
+        labelSelesai.textContent = 'Selesai: ';
+        const inputSelesai = document.createElement('input');
+        inputSelesai.type = 'date';
+        inputSelesai.id = 'tglSelesai';
+        inputSelesai.className = 'form-control';
+        inputSelesai.required = true;
+        
+        // Tambahkan event listener untuk memperbarui input submit
+        // Gabungkan kedua nilai tanggal dengan pemisah (misal: " - ")
+        const updateSubmitValue = () => {
+            if (inputMulai.value && inputSelesai.value) {
+                submitInput.value = `${inputMulai.value} - ${inputSelesai.value}`;
+            } else {
+                submitInput.value = '';
+            }
+        };
+
+        inputMulai.onchange = updateSubmitValue;
+        inputSelesai.onchange = updateSubmitValue;
+
+        // Tampilkan kedua input di container
+        container.appendChild(labelMulai);
+        container.appendChild(inputMulai);
+        // Tambahkan pemisah/spasi
+        container.appendChild(document.createElement('br'));
+        container.appendChild(labelSelesai);
+        container.appendChild(inputSelesai);
+    }
+}
+
+// Panggil fungsi sekali saat halaman dimuat jika Anda ingin ada state awal
+// window.onload = aturTanggalIstirahat;
+
+    function toRoman(num) {
+        if (typeof num !== 'number' || !isFinite(num) || num % 1 !== 0) return '';
+        const key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM", "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC", "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+        const digits = String(+num).split("");
+        let roman = "";
+        let i = 3;
+        while (i--) roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+        return roman;
+    }
+
+    function parseDateInput(input) {
+        if (!input) return null;
+        if (input instanceof Date) return input;
+        let s = String(input).trim();
+        if (s === '') return null;
+        if (s.includes(' - ')) s = s.split(' - ')[0].trim();
+
+        if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)) {
+            const [d, m, y] = s.split('/');
+            return new Date(`${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T00:00:00`);
+        }
+        if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(s)) {
+            const [d, m, y] = s.split('-');
+            return new Date(`${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}T00:00:00`);
+        }
+        const dObj = new Date(s);
+        if (!isNaN(dObj.getTime())) return dObj;
+        return null;
+    }
+
+    function isSameDay(date1, date2) {
+        const d1 = parseDateInput(date1);
+        const d2 = parseDateInput(date2);
+        if (!d1 || !d2) return false;
+        return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate();
+    }
+
+    function inRange(dateStr, startStr, endStr) {
+        const d = parseDateInput(dateStr);
+        const s = parseDateInput(startStr);
+        const e = parseDateInput(endStr);
+        if (!d || !s || !e) return false;
+        s.setHours(0, 0, 0, 0);
+        e.setHours(23, 59, 59, 999);
+        return d >= s && d <= e;
+    }
+
+    function clearTodayList() {
+        if (confirm("Apakah Anda yakin ingin menghapus seluruh daftar antrean hari ini? Tindakan ini tidak dapat dibatalkan.")) {
+            localStorage.removeItem('antrian');
+            renderAntrian(selectedDate);
+            alert("Daftar antrean berhasil dihapus!");
+        }
+    }
+
+    function toggleSortOrder() {
+        sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+        const sortButton = document.getElementById('sortButton');
+        if (sortButton) {
+            sortButton.innerHTML = `<i class="fas fa-sort-numeric-${sortOrder === 'asc' ? 'down-alt' : 'up-alt'}"></i> Urutkan`;
+        }
+        currentPage = 1;
+        renderAntrian(selectedDate);
+    }
+
+    function renderAntrian(filterDate) {
+        const listContainer = document.getElementById("antrianList");
+        const emptyState = document.getElementById("kosongState");
+        const filter = (document.getElementById('searchInput') ? document.getElementById('searchInput').value : '').toLowerCase();
+        let antrian = JSON.parse(localStorage.getItem('antrian')) || [];
+
+        const filteredAntrian = antrian.filter(p => {
+            let dateMatch = true;
+            if (dateRange.start && dateRange.end) {
+                dateMatch = inRange(p['TGL SURAT'], dateRange.start, dateRange.end);
+            } else if (filterDate) {
+                dateMatch = isSameDay(p['TGL SURAT'], filterDate);
+            }
+
+            if (!dateMatch) return false;
+
+            const nama = (p['NAMA'] || '').toLowerCase();
+            const alamat = String(p['ALAMAT'] || '').toLowerCase();
+            const jenisSurat = (p['JENIS_SURAT'] || '').toLowerCase();
+            return nama.includes(filter) || alamat.includes(filter) || jenisSurat.includes(filter);
+        });
+
+        filteredAntrian.sort((a, b) => {
+            const numA = parseInt(a['NO SURAT'], 10) || 0;
+            const numB = parseInt(b['NO SURAT'], 10) || 0;
+            return sortOrder === 'asc' ? numA - numB : numB - numA;
+        });
+
+        if (!listContainer || !emptyState) return;
+
+        const totalPages = Math.ceil(filteredAntrian.length / rowsPerPage) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const paginatedAntrian = filteredAntrian.slice(startIndex, endIndex);
+
+        listContainer.innerHTML = "";
+        emptyState.style.display = (filteredAntrian.length === 0) ? "block" : "none";
+
+        if (paginatedAntrian.length > 0) {
+            let table = document.createElement("table");
+            table.className = "antrian-table";
+            table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Tanggal Terbit</th>
+                    <th>No. Surat</th>
+                    <th>Nama</th>
+                    <th>Alamat</th>
+                    <th>Jenis Surat</th>
+                    <th>Unit Penerbit</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+            const tbody = table.querySelector("tbody");
+
+            paginatedAntrian.forEach(p => {
+                const originalIndex = antrian.findIndex(item => item['NO SURAT'] === p['NO SURAT']);
+
+                const jenisSuratBadgeClass = p['JENIS_SURAT'] === 'Surat Keterangan Sehat' ?
+                    'sehat' :
+                    (p['JENIS_SURAT'] === 'Surat Keterangan Sakit' ?
+                        'sakit' :
+                        'berobat');
+                const unitBadgeClass = p['Unit Penerbit'] === 'Puskesmas Mentikan' ?
+                    'puskesmas' :
+                    (p['Unit Penerbit'] === 'Pustu Miji' ?
+                        'miji' :
+                        'pulorejo');
+
+                let formattedDate = p['TGL SURAT'] || "-";
+                if (formattedDate !== "-") {
+                    const dateObject = new Date(formattedDate);
+                    if (!isNaN(dateObject.getTime())) {
+                        const options = {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        };
+                        formattedDate = dateObject.toLocaleDateString('id-ID', options);
+                    }
+                }
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${formattedDate}</td>
+                <td>${p['NO SURAT'] || "-"}</td>
+                <td>${p['NAMA'] || "-"}</td>
+                <td>${p['ALAMAT'] || "-"}</td>
+                <td><span class="status-badge ${jenisSuratBadgeClass}">${p['JENIS_SURAT'] || "-"}</span></td>
+                <td><span class="unit-badge ${unitBadgeClass}">${p['Unit Penerbit'] || "-"}</span></td>
+                <td class="aksi-cell">
+                    <button class="btn-action edit" onclick="editData(${originalIndex})">
+                        <i class="fas fa-pencil-alt"></i> Edit
+                    </button>
+                    <button class="btn-action hapus" onclick="hapusData(${originalIndex})">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                    <button class="btn-action print" onclick="printData(${originalIndex})">
+                        <i class="fas fa-print"></i> Cetak
+                    </button>
+                </td>
+            `;
+                tbody.appendChild(tr);
+            });
+
+            listContainer.appendChild(table);
+
+            const paginationContainer = document.getElementById('pagination-controls');
+            if (paginationContainer) {
+                paginationContainer.innerHTML = '';
+                const prevButton = document.createElement('button');
+                prevButton.innerText = 'Sebelumnya';
+                prevButton.disabled = currentPage === 1;
+                prevButton.onclick = () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderAntrian(filterDate);
+                    }
+                };
+
+                const nextButton = document.createElement('button');
+                nextButton.innerText = 'Berikutnya';
+                nextButton.disabled = currentPage >= totalPages;
+                nextButton.onclick = () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderAntrian(filterDate);
+                    }
+                };
+
+                const pageInfo = document.createElement('span');
+                pageInfo.innerText = `Halaman ${currentPage} dari ${totalPages}`;
+
+                paginationContainer.appendChild(prevButton);
+                paginationContainer.appendChild(pageInfo);
+                paginationContainer.appendChild(nextButton);
+            }
+        }
+    }
+
+    function renderRiwayat() {
+        const riwayatTableBody = document.querySelector('#riwayatTable tbody');
+        if (!riwayatTableBody) return;
+        let antrian = JSON.parse(localStorage.getItem('antrian')) || [];
+
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const riwayatKemarin = antrian.filter(p => {
+            const tglSurat = parseDateInput(p['TGL SURAT']);
+            return tglSurat && isSameDay(tglSurat, yesterday);
+        });
+        riwayatKemarin.sort((a, b) => {
+            return new Date(b['TGL SURAT']) - new Date(a['TGL SURAT']);
+        });
+        const limaDataTerakhir = riwayatKemarin.slice(0, 10);
+        riwayatTableBody.innerHTML = '';
+        if (limaDataTerakhir.length === 0) {
+            riwayatTableBody.innerHTML = '<tr><td colspan="10">Tidak ada riwayat untuk hari kemarin.</td></tr>';
+        } else {
+            limaDataTerakhir.forEach((p, index) => {
+                const row = document.createElement('tr');
+                const formattedDate = p['TGL SURAT'] ? parseDateInput(p['TGL SURAT']).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                }) : '-';
+                row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${p['NO SURAT'] || '-'}</td>
+                <td>${p['NAMA'] || '-'}</td>
+                <td>${p['JENIS_SURAT'] || '-'}</td>
+                <td>${formattedDate}</td>
+            `;
+                riwayatTableBody.appendChild(row);
+            });
+        }
+    }
+
+    function editData(index) {
+        let antrian = JSON.parse(localStorage.getItem('antrian')) || [];
+        const data = antrian[index];
+        if (!data) return;
+        editIndex = index;
+        closeForm();
+        let formId;
+        if (data['JENIS_SURAT'] === 'Surat Keterangan Sehat') {
+            formId = 'formSuratSehat';
+        } else if (data['JENIS_SURAT'] === 'Surat Keterangan Sakit') {
+            formId = 'formSuratSakit';
+        } else {
+            formId = 'formSuratBerobat';
+        }
+        const form = document.getElementById(formId);
+        if (form) {
+            form.style.display = 'block';
+            const submitBtn = form.querySelector('.btn-save');
+            if (submitBtn) {
+                submitBtn.textContent = 'Perbarui Data';
+                submitBtn.className = 'btn-update';
+            }
+            const noSuratInput = form.querySelector('input[name="NO SURAT"]');
+            if (noSuratInput) noSuratInput.disabled = false;
+            for (const key in data) {
+                const input = form.querySelector(`[name="${key}"]`);
+                if (input) {
+                    input.value = data[key];
+                }
+            }
+        }
+    }
+
+    function hapusData(index) {
+        let antrian = JSON.parse(localStorage.getItem('antrian')) || [];
+        if (antrian[index] && confirm(`Hapus data ${antrian[index]['NAMA']} dari daftar antrean?`)) {
+            antrian.splice(index, 1);
+            localStorage.setItem('antrian', JSON.stringify(antrian));
+            renderAntrian(selectedDate);
+        }
+    }
+
+    function printData(index) {
+        let antrian = JSON.parse(localStorage.getItem('antrian')) || [];
+        const data = antrian[index];
+        if (!data) {
+            alert("Data tidak ditemukan.");
+            return;
+        }
+
+        const today = new Date();
+        const month = today.getMonth() + 1;
+        const romanMonth = toRoman(month);
+        const formattedDate = today.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+
+        let printTemplate;
+        const options = {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        };
+
+        const formatDate = (dateString) => {
+            if (!dateString) return "-";
+            try {
+                if (dateString.includes(' - ')) {
+                    const parts = dateString.split(' - ');
+                    const date1 = new Date(parts[0]);
+                    const date2 = new Date(parts[1]);
+                    if (!isNaN(date1.getTime()) && !isNaN(date2.getTime())) {
+                        return `${date1.toLocaleDateString('id-ID', options)} - ${date2.toLocaleDateString('id-ID', options)}`;
+                    }
+                }
+                const date = new Date(dateString);
+                if (!isNaN(date.getTime())) {
+                    return date.toLocaleDateString('id-ID', options);
+                }
+            } catch (e) {
+                console.error("Gagal memformat tanggal:", e);
+            }
+            return dateString;
+        };
+
+        if (data['JENIS_SURAT'] === 'Surat Keterangan Sakit') {
+            printTemplate = document.getElementById('cetakSakit');
+            if (printTemplate) {
+                document.getElementById('printNoSuratSakit').innerText = data['NO SURAT'] || "-";
+                document.getElementById('printBulanSakit').innerText = romanMonth || "-";
+                document.getElementById('printNamaSakit').innerText = data['NAMA'] || "-";
+                document.getElementById('printUsiaSakit').innerText = data['USIA'] || "-";
+                document.getElementById('printJkSakit').innerText = data['JK'] || "-";
+                document.getElementById('printAlamatSakit').innerText = data['ALAMAT'] || "-";
+                document.getElementById('printPekerjaanSakit').innerText = data['PEKERJAAN'] || "-";
+                document.getElementById('printLamaIstirahat').innerText = data['LAMA ISTIRAHAT'] || "-";
+                document.getElementById('printTanggalIstirahat').innerText = formatDate(data['TANGGAL ISTIRAHAT']);
+                document.getElementById('printDokterSakit').innerText = data['DOKTER'] || "-";
+                document.getElementById('printNipSakit').innerText = data['NIP'] || "-";
+                document.getElementById('printTglSuratSakit').innerText = formatDate(data['TGL SURAT']) || "-";
+            }
+        } else if (data['JENIS_SURAT'] === 'Surat Keterangan Berobat') {
+            printTemplate = document.getElementById('cetakBerobat');
+            if (printTemplate) {
+                document.getElementById('printNoSuratBerobat').innerText = data['NO SURAT'] || "-";
+                document.getElementById('printBulanBerobat').innerText = romanMonth || "-";
+                document.getElementById('printNamaBerobat').innerText = data['NAMA'] || "-";
+                document.getElementById('printUsiaBerobat').innerText = data['USIA'] || "-";
+                document.getElementById('printJkBerobat').innerText = data['JK'] || "-";
+                document.getElementById('printAlamatBerobat').innerText = data['ALAMAT'] || "-";
+                document.getElementById('printPekerjaanBerobat').innerText = data['PEKERJAAN'] || "-";
+                document.getElementById('printTanggalBerobat').innerText = formatDate(data['TANGGAL BEROBAT']);
+                document.getElementById('printDokterBerobat').innerText = data['DOKTER'] || "-";
+                document.getElementById('printNipBerobat').innerText = data['NIP'] || "-";
+                document.getElementById('printTglSuratBerobat').innerText = formattedDate || "-";
+            }
+        } else { // Surat Keterangan Sehat
+            printTemplate = document.getElementById('cetakSehat');
+            if (printTemplate) {
+                document.getElementById('printNoSurat').innerText = data['NO SURAT'] || "-";
+                document.getElementById('printBulan').innerText = data['BULAN'] || "-";
+                document.getElementById('printNama').innerText = data['NAMA'] || "-";
+                document.getElementById('printKotaLahir').innerText = data['KOTA LAHIR'] || "-";
+                document.getElementById('printTglLahir').innerText = formatDate(data['TGL LAHIR']);
+                document.getElementById('printJK').innerText = data['JK'] || "-";
+                document.getElementById('printAlamat').innerText = data['ALAMAT'] || "-";
+                document.getElementById('printPekerjaan').innerText = data['PEKERJAAN/SEKOLAH'] || "-";
+                document.getElementById('printKeperluan').innerText = data['KEPERLUAN'] || "-";
+
+                // === PERBAIKAN UNTUK HASIL CETAK (TERMASUK CATIN & BOLD) ===
+                let hasilCetak = data['HASIL'] || "-";
+                let teksLengkap; // Variabel penampung teks final yang mengandung HTML
+
+                if (hasilCetak === 'Sehat') {
+                    // Kata "Sehat" dibungkus <strong>
+                    teksLengkap = '<strong>Sehat</strong> secara Jasmani dan Rohani';
+                } else if (hasilCetak === 'Catin') {
+                    // Gabungan frasa lengkap dan kata 'Sehat' dibungkus <strong>
+                    teksLengkap = 'dapat melangsungkan <strong>Pernikahan</strong>';
+                } else if (hasilCetak === 'Tidak Sehat') {
+                    // Kata "Tidak Sehat" dibungkus <strong>
+                    teksLengkap = '<strong>Tidak Sehat</strong>';
+                } else {
+                    // Jika ada nilai lain, gunakan nilai aslinya tanpa format
+                    teksLengkap = hasilCetak;
+                }
+
+                // PENTING: Mengganti .innerText menjadi .innerHTML agar tag <strong> berfungsi
+                document.getElementById('printHasil').innerHTML = teksLengkap; 
+                // ======================================================
+
+                document.getElementById('printTb').innerText = `${data['TB'] || "-"} cm`;
+                document.getElementById('printBb').innerText = `${data['BB'] || "-"} kg`;
+                document.getElementById('printSistole').innerText = data['SIS'] || "-";
+                document.getElementById('printDiastole').innerText = data['DIS'] || "-";
+                document.getElementById('printKacamata').innerText = data['KACAMATA'] || "-";
+                document.getElementById('printButaWarna').innerText = data['BUTA WARNA'] || "-";
+                document.getElementById('printGolda').innerText = data['GOLDA'] || "-";
+                document.getElementById('printBertato').innerText = data['BERTATO'] || "-";
+                document.getElementById('printBertindik').innerText = data['BERTINDIK'] || "-";
+                document.getElementById('printTglSurat').innerText = formatDate(data['TGL SURAT']);
+                document.getElementById('printDokter').innerText = data['DOKTER'] || "-";
+                document.getElementById('printNip').innerText = data['NIP'] || "-";
+            }
+        }
+
+        if (printTemplate) {
+            const originalBody = document.body.innerHTML;
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = printTemplate.outerHTML;
+            document.body.innerHTML = tempDiv.innerHTML;
+            window.print();
+            document.body.innerHTML = originalBody;
+            window.location.reload();
+        } else {
+            alert("Template cetak tidak ditemukan.");
+        }
+    }
+
+    async function submitData(form) {
+        showLoading();
+        const formData = new FormData(form);
+        const formId = form.id;
+        const jenisSurat = formId === 'formSuratSehat' ? 'Surat Keterangan Sehat' : formId === 'formSuratSakit' ? 'Surat Keterangan Sakit' : 'Surat Keterangan Berobat';
+        formData.append('JENIS_SURAT', jenisSurat);
+        formData.append('WAKTU_SIMPAN', new Date().toISOString());
+
+        try {
+            const response = await fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'cors',
+                body: formData,
+            });
+            const resultText = await response.text();
+            let result;
+            try {
+                result = JSON.parse(resultText);
+            } catch (e) {
+                throw new Error('Response POST bukan JSON: ' + resultText.slice(0, 200));
+            }
+
+            if (result.status === 'success') {
+                alert("Data berhasil disimpan ke Spreadsheet!");
+                await fetchDataFromGAS();
+            } else {
+                throw new Error(result.message || 'Gagal menyimpan (response tidak success)');
+            }
+        } catch (error) {
+            alert(`Gagal menyimpan ke Spreadsheet: ${error.message}. Coba lagi.`);
+            console.error(error);
+        } finally {
+            hideLoading();
+            form.reset();
+            form.style.display = 'none';
+        }
+    }
+
+    // Perbaikan utama
+    function initializeFormListeners() {
+        const forms = document.querySelectorAll('#formSuratSehat, #formSuratBerobat, #formSuratSakit');
+        forms.forEach(form => {
+            const tgl = form.querySelector('input[name="TGL SURAT"]');
+            if (tgl) {
+                tgl.addEventListener('change', function() {
+                    const date = new Date(this.value);
+                    const bulanInput = form.querySelector('input[name="BULAN"]');
+                    if (bulanInput) {
+                        bulanInput.value = toRoman(date.getMonth() + 1);
+                    }
+                });
+            }
+
+            const nik = form.querySelector('input[name="NIK"]');
+            if (nik) {
+                nik.addEventListener('blur', function() {
+                    const val = this.value;
+                    if (val.length < 12) return;
+                    const yr = parseInt(val.substring(10, 12));
+                    const mo = parseInt(val.substring(8, 10));
+                    let dy = parseInt(val.substring(6, 8));
+                    const jkInput = form.querySelector('select[name="JK"]');
+                    if (dy > 40) {
+                        dy -= 40;
+                        if (jkInput) jkInput.value = 'Perempuan';
+                    } else {
+                        if (jkInput) jkInput.value = 'Laki-laki';
+                    }
+                    const nowY = new Date().getFullYear();
+                    const fullY = (yr <= +nowY.toString().slice(-2) ? `20${yr.toString().padStart(2, '0')}` : `19${yr}`);
+                    const bdate = `${fullY}-${String(mo).padStart(2, '0')}-${String(dy).padStart(2, '0')}`;
+                    const tglLahirInput = form.querySelector('input[name="TGL LAHIR"]');
+                    if (tglLahirInput) tglLahirInput.value = bdate;
+                    const age = new Date().getFullYear() - new Date(bdate).getFullYear();
+                    const usiaInput = form.querySelector('input[name="USIA"]');
+                    if (usiaInput) usiaInput.value = age;
+                });
+            }
+
+            const tb = form.querySelector('input[name="TB"]');
+            const bb = form.querySelector('input[name="BB"]');
+            const imt = form.querySelector('input[name="IMT"]');
+            const hitung = () => {
+                const t = parseFloat(tb.value),
+                    b = parseFloat(bb.value);
+                if (t > 0 && b > 0 && imt) {
+                    imt.value = (b / ((t / 100) ** 2)).toFixed(2);
+                } else if (imt) imt.value = '';
+            };
+            if (tb && bb) {
+                tb.addEventListener('input', hitung);
+                bb.addEventListener('input', hitung);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setInterval(updateClock, 1000);
+        updateClock();
+        fetchDataFromGAS();
+        initializeFormListeners();
+
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', () => {
+                currentPage = 1;
+                renderAntrian(selectedDate);
+            });
+        }
+
+        document.querySelectorAll('form').forEach(f => {
+            f.addEventListener('submit', async e => {
+                e.preventDefault();
+                await submitData(f);
+            });
+        });
+
+        const filterDateInput = document.getElementById('filterDate');
+        if (filterDateInput) {
+            filterDateInput.value = selectedDate;
+        }
+
+        const filterButton = document.getElementById('filterDateButton');
+        if (filterButton) {
+            filterButton.addEventListener('click', () => {
+                const newDate = document.getElementById('filterDate').value;
+                if (newDate) {
+                    selectedDate = newDate;
+                    dateRange = {
+                        start: null,
+                        end: null
+                    };
+                    currentPage = 1;
+                    renderAntrian(selectedDate);
+                }
+            });
+        }
+
+        const startInput = document.getElementById('startDate');
+        const endInput = document.getElementById('endDate');
+        const filterRangeButton = document.getElementById('filterRangeButton');
+        const resetRangeButton = document.getElementById('resetRangeButton');
+
+        if (filterRangeButton) {
+            filterRangeButton.addEventListener('click', () => {
+                const start = startInput ? startInput.value : '';
+                const end = endInput ? endInput.value : '';
+                if (!start || !end) {
+                    alert("Mohon pilih Tanggal Awal dan Tanggal Akhir!");
+                    return;
+                }
+                dateRange.start = start;
+                dateRange.end = end;
+                selectedDate = null;
+                currentPage = 1;
+                renderAntrian(selectedDate);
+            });
+        }
+
+        if (resetRangeButton) {
+            resetRangeButton.addEventListener('click', () => {
+                dateRange = {
+                    start: null,
+                    end: null
+                };
+                if (startInput) startInput.value = '';
+                if (endInput) endInput.value = '';
+                selectedDate = (document.getElementById('filterDate') ? document.getElementById('filterDate').value : null) || selectedDate;
+                currentPage = 1;
+                renderAntrian(selectedDate);
+            });
+        }
+
+        document.querySelectorAll('select[name="DOKTER"]').forEach(sel => {
+            sel.addEventListener('change', function() {
+                const nipField = this.closest('form').querySelector('input[name="NIP"]');
+                if (!nipField) return;
+
+                const nipMap = {
+                    'dr. Lampita Dyah Kartikaningsih': '19871017 201903 2 009',
+                    'dr. Emika Ambar Pangesti': '19881218 201903 2 009',
+                    'drg. Fardian Santoso': '19900531 201903 1 011'
+                };
+
+                if (nipMap[this.value]) {
+                    nipField.value = nipMap[this.value];
+                    nipField.readOnly = true;
+                } else {
+                    nipField.value = '';
+                    nipField.readOnly = false;
+                }
+            });
+        });
+
+        setInterval(fetchDataFromGAS, 600000);
+    });
+</script>
+</body>
+</html>
